@@ -1,0 +1,87 @@
+SUMMARY="A powerfull audio player for console"
+DESCRIPTION="MOC (Music on console) is a small, fast and powerful console audio player \
+which supports most major audio formats. Various features include gapless \
+playback, ReplayGain support, MP3 and Ogg streaming, live filtering, etc."
+HOMEPAGE="https://moc.daper.net"
+COPYRIGHT="2005-2015 MOC"
+LICENSE="GNU GPL v2"
+REVISION="1"
+SOURCE_URI="http://ftp.daper.net/pub/soft/moc/stable/moc-2.5.0.tar.bz2"
+#CHECKSUM_MD5="8179a7a843d257ddb585f4c65599844bc0e516fe85e97f6f87a7ceade4eb5165"
+#PATCHES="moc-2.5.0.patch"
+#BUILD_PACKAGED_ACTIVATION_PHASE="INSTALL"
+#STATUS_HAIKU="stable"
+
+ARCHITECTURES="!x86_gcc2 x86"
+SECONDARY_ARCHITECTURES="x86"
+
+PROVIDES="
+	mocp$secondaryArchSuffix = $portVersion
+	cmd:mocp$secondaryArchSuffix = $portVersion
+	"
+#lib:librcc$secondaryArchSuffix
+REQUIRES="
+	haiku$secondaryArchSuffix
+	lib:libdb$secondaryArchSuffix
+	lib:libncurses$secondaryArchSuffix
+	lib:libavutil$secondaryArchSuffix
+	lib:libavformat$secondaryArchSuffix
+	lib:libiconv$secondaryArchSuffix
+	lib:libFLAC$secondaryArchSuffix
+	lib:libmad$secondaryArchSuffix
+	lib:libvorbis$secondaryArchSuffix
+	lib:libogg$secondaryArchSuffix
+	lib:libfaad$secondaryArchSuffix
+	lib:libltdl$secondaryArchSuffix
+	lib:libao$secondaryArchSuffix
+	"
+
+BUILD_REQUIRES="
+	haiku${secondaryArchSuffix}_devel
+	ffmpeg${secondaryArchSuffix}_devel
+	devel:libncurses$secondaryArchSuffix
+	devel:libdb$secondaryArchSuffix
+	devel:libiconv$secondaryArchSuffix
+	devel:libFLAC$secondaryArchSuffix
+	devel:libmad$secondaryArchSuffix
+	devel:libvorbis$secondaryArchSuffix
+	devel:libogg$secondaryArchSuffix
+	devel:libfaad$secondaryArchSuffix
+	devel:libavutil$secondaryArchSuffix
+	devel:libavformat$secondaryArchSuffix
+	devel:libltdl$secondaryArchSuffix
+	devel:libao$secondaryArchSuffix
+	"
+#cmd:libtoolize${secondaryArchSuffix}
+BUILD_PREREQUIRES="
+	cmd:awk
+	haiku${secondaryArchSuffix}_devel
+	cmd:gcc${secondaryArchSuffix}
+	cmd:ld${secondaryArchSuffix}
+	cmd:make
+	cmd:pkg_config${secondaryArchSuffix}
+	"
+#bindir=$binDir \
+#libdir=$libDir \
+#mandir=$manDir \
+#datadir=$dataDir \
+#exampledir=$docDir \
+BUILD()
+{
+	# not an autotools configure
+	./configure  \
+		prefix=$prefix \
+		bindir=$binDir \
+		libdir=$libDir \
+		mandir=$manDir \
+		datadir=$dataDir \
+		exampledir=$docDir \
+		LDFLAGS=-lnetwork
+	#./configure prefix=$prefix
+	make $jobArgs
+}
+
+INSTALL()
+{
+	make install-strip
+}
